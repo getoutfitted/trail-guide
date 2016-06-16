@@ -42,6 +42,15 @@ Template.trailGuideDashboard.helpers({
   },
   humanizeStatus: function () {
     return AdvancedFulfillment.humanOrderStatuses[this.advancedFulfillment.workflow.status];
+  },
+  total: function () {
+    return this.billing[0].invoice.total;
+  },
+  sortingBy: function (field) {
+    if (Session.get('sortField') === field) {
+      return 'active';
+    }
+    return '';
   }
 });
 
