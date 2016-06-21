@@ -1,5 +1,5 @@
 <template name='trailGuideDashboard'>
-  <div class='container-fluid'>
+  <div class='container-fluid '>
     <div class='row text-center'>
       <h1><i class="fa fa-map-signs" aria-hidden="true"></i> Trail Guide</h1>
     </div>
@@ -9,8 +9,25 @@
     <div class="collapse" id="orderFilters">
       <div class="well text-center">
         <div class='row'>
-          <div class='col-sm-3'>
-            Limit: <input class="form-control" name="limit">
+          <div class='col-xs-3'>
+            <form class='form-inline'>
+                <div class="form-group">
+                  <label for="limitFilter">Limit:</label>
+                  <input type="number" id='limitFilter' min="1" class="form-control limitFilter" value={{currentLimit}} name="limit">
+                </div>
+            </form>
+          </div>
+          <div class='col-xs-9'>
+            <div class='row'>
+              <div class='col-xs-2'>
+                <div class="checkbox">
+                  <label>
+                    <input name='customerEnabled' id='customerEnabled' checked="{{customerEnabled}}" type="checkbox"> Customer
+                  </label>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -19,9 +36,9 @@
       <h3>Orders</h3>
     </div>
     <div class='row'>
-      <table class='table table-hover table-condensed'>
+      <table class='table table-hover table-condensed trail-guide-table'>
         <colgroup class='{{sortingBy "orderNumber"}}'></colgroup>
-        <colgroup></colgroup>
+        {{#if customerEnabled}}<colgroup ></colgroup>{{/if}}
         <colgroup></colgroup>
         <colgroup class='{{sortingBy "billing.invoice.total"}}'></colgroup>
         <colgroup class='{{sortingBy "createdAt"}}'></colgroup>
@@ -37,12 +54,12 @@
         <thead>
           <tr>
             <th data-field='orderNumber' class='sortField'>{{{upOrDown 'orderNumber'}}}#</th>
-            <th>Customer</th>
+            {{#if customerEnabled}}<th>Customer</th>{{/if}}
             <th>Contact</th>
             <th data-field='billing.invoice.total' class='sortField'>{{{upOrDown 'billing.invoice.total'}}}Total</th>
             <th data-field='createdAt' class='sortField'>{{{upOrDown 'createdAt'}}}Placed</th>
             <th data-field='advancedFulfillment.transitTime' class='sortField'>{{{upOrDown 'advancedFulfillment.transitTime'}}}Transit</th>
-            <th data-field='advancedFulfillment.shipmentDate' class='sortField'>{{{upOrDown 'advancedFulfillment.shipmentDate'}}}Shippin</th>
+            <th data-field='advancedFulfillment.shipmentDate' class='sortField'>{{{upOrDown 'advancedFulfillment.shipmentDate'}}}Shipping</th>
             <th data-field='startTime' class='sortField'>{{{upOrDown 'startTime'}}}Rental Start</th>
             <th data-field='endTime' class='sortField'>{{{upOrDown 'endTime'}}}Rental End</th>
             <th data-field='advancedFulfillment.returnDate' class='sortField'>{{{upOrDown 'advancedFulfillment.returnDate'}}}Rental End</th>
@@ -57,7 +74,7 @@
           {{#each orders}}
             <tr>
               <td>{{orderNumber}}</td>
-              <td>{{customer}}</td>
+              {{#if customerEnabled}}<td>{{customer}}</td>{{/if}}
               <td>{{{contactInfo}}}</td>
               <td>${{total}}</td>
               <td>{{clearDate createdAt}}</td>

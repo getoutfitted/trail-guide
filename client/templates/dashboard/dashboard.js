@@ -1,12 +1,15 @@
 Template.trailGuideDashboard.onCreated(function () {
   Session.setDefault('sortField', 'orderNumber');
   Session.setDefault('sortOrder', -1);
+  Session.setDefault('limit', 20);
+  Session.setDefault('customerEnabled', true);
   this.autorun(() => {
     let field = Session.get('sortField');
     let order = Session.get('sortOrder');
+    let limit = Session.get('limit') || 20;
     let sort = {};
     sort[field] = order;
-    this.subscribe('trailGuideAllOrders', sort);
+    this.subscribe('trailGuideAllOrders', limit, sort);
   });
 });
 
@@ -51,6 +54,12 @@ Template.trailGuideDashboard.helpers({
       return 'active';
     }
     return '';
+  },
+  currentLimit: function () {
+    return Session.get('limit');
+  },
+  customerEnabled: function () {
+    return Session.get('customerEnabled');
   }
 });
 
@@ -61,5 +70,15 @@ Template.trailGuideDashboard.events({
     let inverseOrder = -Session.get('sortOrder');
     Session.set('sortField', selectedField);
     Session.set('sortOrder', inverseOrder);
+  },
+  'change .limitFilter': function (event) {
+    event.preventDefault();
+    const limit = parseInt(event.target.value, 10);
+    if (typeof limit === 'number') {
+      Session.set('limit', limit);
+    }
+  },
+  'change #customerEnabled': function () {
+    Session.set('customerEnabled', event.target.checked)
   }
 });
