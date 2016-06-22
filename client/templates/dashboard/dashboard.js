@@ -1,8 +1,40 @@
+const defaultDisplayFields = [
+  'orderNumber',
+  'customer',
+  'contact',
+  'total',
+  'createdAt',
+  'transit',
+  'shipping',
+  'rentalStart',
+  'rentalEnd'
+];
+
+// const HumanReadable = {
+//   'orderNumber': 'Order Number',
+//   'customer': 'Customer',
+//   'contact': 'Contact',
+//   'billing.invoice.total': 'Total'
+// };
+
+// const Sortable = {
+//   'orderNumber': true,
+//   'customer': false,
+//   'contact': false,
+//   'billing.invoice.total': true
+// };
+
 Template.trailGuideDashboard.onCreated(function () {
   Session.setDefault('sortField', 'orderNumber');
   Session.setDefault('sortOrder', -1);
   Session.setDefault('limit', 20);
   Session.setDefault('customerEnabled', true);
+  let displayFields = defaultDisplayFields;
+  let defaultDisplay = {};
+  _.each(displayFields, function (df) {
+    defaultDisplay[df] = true;
+  });
+  Session.setDefault('enabledFields', defaultDisplay);
   this.autorun(() => {
     let field = Session.get('sortField');
     let order = Session.get('sortOrder');
@@ -60,6 +92,12 @@ Template.trailGuideDashboard.helpers({
   },
   customerEnabled: function () {
     return Session.get('customerEnabled');
+  },
+  fields: function (field) {
+    return Session.get('enabledFields')[field];
+  },
+  displayFields: function () {
+    return defaultDisplayFields;
   }
 });
 
@@ -79,6 +117,12 @@ Template.trailGuideDashboard.events({
     }
   },
   'change #customerEnabled': function () {
-    Session.set('customerEnabled', event.target.checked)
+    Session.set('customerEnabled', event.target.checked);
+  },
+  'change .toggleDisplayField': function () {
+    const field = event.target.name;
+    let displaySettings = Session.get('enabledFields');
+    displaySettings[field] = !displaySettings[field];
+    Session.set('enabledFields', displaySettings);
   }
 });

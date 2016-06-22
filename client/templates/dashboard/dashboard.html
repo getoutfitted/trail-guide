@@ -19,15 +19,16 @@
           </div>
           <div class='col-xs-9'>
             <div class='row'>
+            {{#each displayFields}}
               <div class='col-xs-2'>
                 <div class="checkbox">
                   <label>
-                    <input name='customerEnabled' id='customerEnabled' checked="{{customerEnabled}}" type="checkbox"> Customer
+                    <input name='{{this}}' class='toggleDisplayField' id='{{this}}' checked="{{fields this}}" type="checkbox"> {{this}}
                   </label>
                 </div>
               </div>
+            {{/each}}
             </div>
-
           </div>
         </div>
       </div>
@@ -37,11 +38,11 @@
     </div>
     <div class='row'>
       <table class='table table-hover table-condensed trail-guide-table'>
-        <colgroup class='{{sortingBy "orderNumber"}}'></colgroup>
-        {{#if customerEnabled}}<colgroup ></colgroup>{{/if}}
-        <colgroup></colgroup>
-        <colgroup class='{{sortingBy "billing.invoice.total"}}'></colgroup>
-        <colgroup class='{{sortingBy "createdAt"}}'></colgroup>
+        {{#if fields 'orderNumber'}}<colgroup class='{{sortingBy "orderNumber"}}'></colgroup>{{/if}}
+        {{#if fields 'customer'}}<colgroup ></colgroup>{{/if}}
+        {{#if fields 'contact'}}<colgroup></colgroup>{{/if}}
+        {{#if fields 'total'}}<colgroup class='{{sortingBy "billing.invoice.total"}}'></colgroup>{{/if}}
+        {{#if fields 'createdAt'}}<colgroup class='{{sortingBy "createdAt"}}'></colgroup>{{/if}}
         <colgroup class='{{sortingBy "advancedFulfillment.transitTime"}}'></colgroup>
         <colgroup class='{{sortingBy "advancedFulfillment.shipmentDate"}}'></colgroup>
         <colgroup class='{{sortingBy "startTime"}}'></colgroup>
@@ -53,11 +54,11 @@
         <colgroup class='{{sortingBy "advancedFulfillment.workflow.status"}}'></colgroup>
         <thead>
           <tr>
-            <th data-field='orderNumber' class='sortField'>{{{upOrDown 'orderNumber'}}}#</th>
-            {{#if customerEnabled}}<th>Customer</th>{{/if}}
-            <th>Contact</th>
-            <th data-field='billing.invoice.total' class='sortField'>{{{upOrDown 'billing.invoice.total'}}}Total</th>
-            <th data-field='createdAt' class='sortField'>{{{upOrDown 'createdAt'}}}Placed</th>
+            {{#if fields 'orderNumber'}}<th data-field='orderNumber' class='sortField'>{{{upOrDown 'orderNumber'}}}#</th>{{/if}}
+            {{#if fields 'customer'}}<th>Customer</th>{{/if}}
+            {{#if fields 'contact'}}<th>Contact</th>{{/if}}
+            {{#if fields 'total'}}<th data-field='billing.invoice.total' class='sortField'>{{{upOrDown 'billing.invoice.total'}}}Total</th>{{/if}}
+            {{#if fields 'createdAt'}}<th data-field='createdAt' class='sortField'>{{{upOrDown 'createdAt'}}}Placed</th>{{/if}}
             <th data-field='advancedFulfillment.transitTime' class='sortField'>{{{upOrDown 'advancedFulfillment.transitTime'}}}Transit</th>
             <th data-field='advancedFulfillment.shipmentDate' class='sortField'>{{{upOrDown 'advancedFulfillment.shipmentDate'}}}Shipping</th>
             <th data-field='startTime' class='sortField'>{{{upOrDown 'startTime'}}}Rental Start</th>
@@ -73,11 +74,11 @@
         <tbody>
           {{#each orders}}
             <tr>
-              <td>{{orderNumber}}</td>
-              {{#if customerEnabled}}<td>{{customer}}</td>{{/if}}
-              <td>{{{contactInfo}}}</td>
-              <td>${{total}}</td>
-              <td>{{clearDate createdAt}}</td>
+              {{#if fields 'orderNumber'}}<td>{{orderNumber}}</td>{{/if}}
+              {{#if fields 'customer'}}<td>{{customer}}</td>{{/if}}
+              {{#if fields 'contact'}}<td>{{{contactInfo}}}</td>{{/if}}
+              {{#if fields 'total'}}<td>${{total}}</td>{{/if}}
+              {{#if fields 'createdAt'}}<td>{{clearDate createdAt}}</td>{{/if}}
               <td>{{advancedFulfillment.transitTime}}</td>
               <td>{{clearDate advancedFulfillment.shipmentDate}}</td>
               <td>{{clearDate startTime}}</td>
