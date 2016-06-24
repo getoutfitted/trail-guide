@@ -23,7 +23,7 @@
               <div class='col-xs-2'>
                 <div class="checkbox">
                   <label>
-                    <input name='{{this}}' class='toggleDisplayField' id='{{this}}' checked="{{fields this}}" type="checkbox"> {{this}}
+                    <input name='{{this}}' class='toggleDisplayField' id='{{this}}' checked="{{fields this}}" type="checkbox"> {{humanReadableField this}}
                   </label>
                 </div>
               </div>
@@ -38,60 +38,52 @@
     </div>
     <div class='row'>
       <table class='table table-hover table-condensed trail-guide-table'>
-        {{#if fields 'orderNumber'}}<colgroup class='{{sortingBy "orderNumber"}}'></colgroup>{{/if}}
-        {{#if fields 'customer'}}<colgroup ></colgroup>{{/if}}
-        {{#if fields 'contact'}}<colgroup></colgroup>{{/if}}
-        {{#if fields 'total'}}<colgroup class='{{sortingBy "billing.invoice.total"}}'></colgroup>{{/if}}
-        {{#if fields 'createdAt'}}<colgroup class='{{sortingBy "createdAt"}}'></colgroup>{{/if}}
-        <colgroup class='{{sortingBy "advancedFulfillment.transitTime"}}'></colgroup>
-        <colgroup class='{{sortingBy "advancedFulfillment.shipmentDate"}}'></colgroup>
-        <colgroup class='{{sortingBy "startTime"}}'></colgroup>
-        <colgroup class='{{sortingBy "endTime"}}'></colgroup>
-        <colgroup class='{{sortingBy "advancedFulfillment.returnDate"}}'></colgroup>
-        <colgroup class='{{sortingBy "rentalDays"}}'></colgroup>
-        <colgroup class='{{sortingBy "shipping.address.region"}}'></colgroup>
-        <colgroup class='{{sortingBy "billing.address.region"}}'></colgroup>
-        <colgroup class='{{sortingBy "advancedFulfillment.workflow.status"}}'></colgroup>
+        {{#each displayFields}}
+          {{> columnGroupHeader}}
+        {{/each}}
         <thead>
           <tr>
-            {{#if fields 'orderNumber'}}<th data-field='orderNumber' class='sortField'>{{{upOrDown 'orderNumber'}}}#</th>{{/if}}
-            {{#if fields 'customer'}}<th>Customer</th>{{/if}}
-            {{#if fields 'contact'}}<th>Contact</th>{{/if}}
-            {{#if fields 'total'}}<th data-field='billing.invoice.total' class='sortField'>{{{upOrDown 'billing.invoice.total'}}}Total</th>{{/if}}
-            {{#if fields 'createdAt'}}<th data-field='createdAt' class='sortField'>{{{upOrDown 'createdAt'}}}Placed</th>{{/if}}
-            <th data-field='advancedFulfillment.transitTime' class='sortField'>{{{upOrDown 'advancedFulfillment.transitTime'}}}Transit</th>
-            <th data-field='advancedFulfillment.shipmentDate' class='sortField'>{{{upOrDown 'advancedFulfillment.shipmentDate'}}}Shipping</th>
-            <th data-field='startTime' class='sortField'>{{{upOrDown 'startTime'}}}Rental Start</th>
-            <th data-field='endTime' class='sortField'>{{{upOrDown 'endTime'}}}Rental End</th>
-            <th data-field='advancedFulfillment.returnDate' class='sortField'>{{{upOrDown 'advancedFulfillment.returnDate'}}}Rental End</th>
-            <th data-field='rentalDays' class='sortField'>{{{upOrDown 'rentalDays'}}}Length</th>
-            <th data-field='shipping.address.region' class='sortField'>{{{upOrDown 'shipping.address.region'}}}Ship To</th>
-            <th data-field='billing.address.region' class='sortField'>{{{upOrDown 'billing.address.region'}}}Bill To</th>
-            <th data-field='advancedFulfillment.workflow.status' class='sortField'>{{{upOrDown 'advancedFulfillment.workflow.status'}}}Status</th>
-
+          {{#each displayFields}}
+            {{> columnMainHeaders}}
+          {{/each}}
           </tr>
         </thead>
         <tbody>
           {{#each orders}}
             <tr>
-              {{#if fields 'orderNumber'}}<td>{{orderNumber}}</td>{{/if}}
-              {{#if fields 'customer'}}<td>{{customer}}</td>{{/if}}
-              {{#if fields 'contact'}}<td>{{{contactInfo}}}</td>{{/if}}
-              {{#if fields 'total'}}<td>${{total}}</td>{{/if}}
-              {{#if fields 'createdAt'}}<td>{{clearDate createdAt}}</td>{{/if}}
-              <td>{{advancedFulfillment.transitTime}}</td>
-              <td>{{clearDate advancedFulfillment.shipmentDate}}</td>
-              <td>{{clearDate startTime}}</td>
-              <td>{{clearDate endTime}}</td>
-              <td>{{clearDate advancedFulfillment.returnDate}}</td>
-              <td>{{rentalDays}}</td>
-              <td>{{region 'shipping'}}</td>
-              <td>{{region 'billing'}}</td>
-              <td>{{humanizeStatus}}</td>
+              {{#each displayFields}}
+                {{> columnMainRow}}
+              {{/each}}
             </tr>
           {{/each}}
         </tbody>
       </table>
     </div>
   </div>
+</template>
+
+<template name='columnGroupHeader'>
+  {{#if enabled}}
+    <colgroup class='{{active}}'></colgroup>
+  {{/if}}
+</template>
+
+<template name='columnMainHeaders'>
+  {{#if enabled}}
+    <th data-field='{{this}}' class='sortField'>{{> Template.dynamic template=upOrDown}}{{label}}</th>
+  {{/if}}
+</template>
+
+<template name='upArrow'>
+  <i data-field={{this}} class="fa fa-caret-up change" aria-hidden="true"></i>
+</template>
+
+<template name='downArrow'>
+  <i data-field={{this}} class="fa fa-caret-down change" aria-hidden="true"></i>
+</template>
+
+<template name='columnMainRow'>
+  {{#if enabled}}
+    <td>{{orderInfo}}</td>
+  {{/if}}
 </template>
