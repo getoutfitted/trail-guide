@@ -22,6 +22,7 @@ Template.trailGuideDashboard.onCreated(function () {
   Session.setDefault('sortField', 'orderNumber');
   Session.setDefault('sortOrder', -1);
   Session.setDefault('limit', 20);
+  Session.setDefault('find', {});
   let displayFields = Object.keys(DefaultFields);
   let defaultDisplay = {};
   _.each(displayFields, function (df) {
@@ -38,9 +39,10 @@ Template.trailGuideDashboard.onCreated(function () {
     let order = Session.get('sortOrder');
     let limit = Session.get('limit') || 20;
     let activeFields = Session.get('enabledFields');
+    let find = Session.get('find');
     let sort = {};
     sort[field] = order;
-    this.subscribe('trailGuideAllOrders', limit, sort, activeFields);
+    this.subscribe('trailGuideAllOrders', find, limit, sort, activeFields);
   });
 });
 
@@ -91,6 +93,15 @@ Template.trailGuideDashboard.events({
     let displaySettings = Session.get('enabledFields');
     displaySettings[field] = !displaySettings[field];
     Session.set('enabledFields', displaySettings);
+  },
+  'submit .advancedSearchFilters': function (event) {
+    event.preventDefault();
+    let find = Session.get('find');
+    const billingName = event.target.billingName.value;
+    if (billingName) {
+      find['billing.address.fullName'] = billingName;
+    }
+    Session.set('find', find);
   }
 });
 

@@ -3,9 +3,13 @@
     <div class='row text-center'>
       <h1><i class="fa fa-map-signs" aria-hidden="true"></i> Trail Guide</h1>
     </div>
-    <div class='row filters text-center'>
-      <a class="btn btn-default" role="button" data-toggle="collapse" href="#orderFilters" aria-expanded="false" aria-controls="orderFilters">Filters</a>
+    <div class='row text-center'>
+      <h2>Orders</h2>
     </div>
+    <div class='row filters text-center'>
+      <a class="btn btn-default btn-sm" role="button" data-toggle="collapse" href="#orderFilters" aria-expanded="false" aria-controls="orderFilters">Filters</a>
+    </div>
+    <br/>
     <div class="collapse" id="orderFilters">
       <div class="well text-center">
         <div class='row'>
@@ -31,10 +35,22 @@
             </div>
           </div>
         </div>
+        <div class='row text-center'>
+          <h4>Advanced Search Criteria:</h4>
+          <form class='advancedSearchFilters'>
+            <div class='col-xs-6'>
+              <div class="form-group">
+                <label for="billingName">Customer Name</label>
+                <input class="form-control" name='billingName' id="billingName" placeholder="Search Paul Grever, Paul or P">
+              </div>
+            </div>
+            <!-- NEW SIDE -->
+            <div class='row text-center'>
+              <button class='btn'>Submit</button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
-    <div class='row text-center'>
-      <h3>Orders</h3>
     </div>
     <div class='row'>
       <table class='table table-hover table-condensed trail-guide-table'>
