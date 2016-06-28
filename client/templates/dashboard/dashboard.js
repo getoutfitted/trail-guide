@@ -145,9 +145,16 @@ Template.trailGuideDashboard.events({
       find.orderNumber.$gte = 0;
       find.orderNumber.$lte = orderMax;
     } else {
-      delete find['orderNumber'];
+      delete find.orderNumber;
     }
     Session.set('find', find);
+  },
+  'click tr ': function (event) {
+    event.preventDefault();
+    const _id = this._id;
+    if (_id && ReactionCore.hasPermission('advancedFulfillment')) {
+      ReactionRouter.go('orderDetails', {_id: _id});
+    }
   }
 });
 
@@ -189,6 +196,9 @@ Template.columnMainRow.helpers({
     return Session.get('enabledFields')[str];
   },
   orderInfo: function () {
+    if (!Template.parentData().advancedFulfillment) {
+      return;
+    }
     const field = this.valueOf();
     switch (field) {
     // Using Fall through technique which is || in Switch

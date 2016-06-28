@@ -25,6 +25,7 @@ Meteor.publish('trailGuideAllOrders', function (find, limit, sort, fields) {
       fields: returnFields
     });
   }
+  return this.ready();
 });
 
 Meteor.publish('trailGuideProducts', function () {
@@ -37,4 +38,5 @@ Meteor.publish('trailGuideProducts', function () {
       }
     });
   }
+  return this.ready();
 });
