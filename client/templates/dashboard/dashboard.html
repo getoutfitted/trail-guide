@@ -49,14 +49,26 @@
               </div>
             </div>
             <div class='col-xs-6'>
-              <label for='orderswithProducts'>Products in Orders</label>
-              <select name='products' id='orderswithProducts' class="form-control">
-                <option value='' disabled selected >Select a Product</option>
-                {{#each products}}
-                  <option value='{{_id}}'>{{pageTitle}}</option>
-                {{/each}}
-                <option value='' >Clear Items</option>
-              </select>
+              <div class='form-group'>
+                <label for='orderswithProducts'>Products in Orders</label>
+                <select name='products' id='orderswithProducts' class="form-control">
+                  <option value='' disabled selected >Select a Product</option>
+                  {{#each products}}
+                    <option value='{{_id}}'>{{pageTitle}}</option>
+                  {{/each}}
+                  <option value='' >Clear Items</option>
+                </select>
+              </div>
+              <div class='row'>
+                <div class="col-xs-6 form-group">
+                  <label for="orderMin">Minimum Order #</label>
+                  <input type='number' min='0' class="form-control" name='orderMin' id="orderMin">
+                </div>
+                <div class="col-xs-6 form-group">
+                  <label for="orderMax">Maximum Order #</label>
+                  <input type='number' class="form-control" name='orderMax' id="orderMax">
+                </div>
+              </div>
             </div>
             <div class='col-xs-12'>
               <button class='btn btn-default'>Submit</button>

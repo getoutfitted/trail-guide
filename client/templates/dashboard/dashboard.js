@@ -130,6 +130,23 @@ Template.trailGuideDashboard.events({
     } else {
       delete find['items.productId'];
     }
+    const orderMin = parseInt(event.target.orderMin.value, 10);
+    const orderMax = parseInt(event.target.orderMax.value, 10);
+    if (orderMin && orderMax) {
+      find.orderNumber = {};
+      find.orderNumber.$gte = orderMin;
+      find.orderNumber.$lte = orderMax;
+    } else if (orderMin) {
+      find.orderNumber = {};
+      find.orderNumber.$gte = orderMin;
+      find.orderNumber.$lte = Infinity;
+    } else if (orderMax) {
+      find.orderNumber = {};
+      find.orderNumber.$gte = 0;
+      find.orderNumber.$lte = orderMax;
+    } else {
+      delete find['orderNumber'];
+    }
     Session.set('find', find);
   }
 });
@@ -174,6 +191,7 @@ Template.columnMainRow.helpers({
   orderInfo: function () {
     const field = this.valueOf();
     switch (field) {
+    // Using Fall through technique which is || in Switch
     case 'billing.address.fullName':
     case 'shipping.address.fullName':
       const billOrShip = field.split('.')[0];
@@ -184,7 +202,6 @@ Template.columnMainRow.helpers({
     case 'advancedFulfillment.transitTime':
       const afField = field.split('.')[1];
       return Template.parentData().advancedFulfillment[afField];
-    // Using Fall through technique which is || in Switch
     case 'createdAt':
     case 'startTime':
     case 'endTime':
