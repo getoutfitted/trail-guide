@@ -44,7 +44,16 @@
                 <input class="form-control" name='billingName' id="billingName" placeholder="Search Paul Grever, Paul or P">
               </div>
             </div>
-            <!-- NEW SIDE -->
+            <div class='col-xs-6'>
+              <label for='orderswithProducts'>Products in Orders</label>
+              <select name='products' id='orderswithProducts' class="form-control">
+                <option value='' disabled selected >Select a Product</option>
+                {{#each products}}
+                  <option value='{{_id}}'>{{pageTitle}}</option>
+                {{/each}}
+                <option value='' >Clear Items</option>
+              </select>
+            </div>
             <div class='row text-center'>
               <button class='btn'>Submit</button>
             </div>
@@ -66,7 +75,7 @@
         </thead>
         <tbody>
           {{#each orders}}
-            <tr>
+            <tr data-id="{{_id}}" class="trailGuideOrder">
               {{#each displayFields}}
                 {{> columnMainRow}}
               {{/each}}

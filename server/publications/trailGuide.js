@@ -23,3 +23,15 @@ Meteor.publish('trailGuideAllOrders', function (find, limit, sort, fields) {
     });
   }
 });
+
+Meteor.publish('trailGuideProducts', function () {
+  if (Roles.userIsInRole(this.userId, 'trail-guide', ReactionCore.getShopId())) {
+    return ReactionCore.Collections.Products.find({
+      type: 'simple'
+    }, {
+      fields: {
+        pageTitle: 1
+      }
+    });
+  }
+});

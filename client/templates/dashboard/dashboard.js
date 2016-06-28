@@ -44,6 +44,7 @@ Template.trailGuideDashboard.onCreated(function () {
     sort[field] = order;
     this.subscribe('trailGuideAllOrders', find, limit, sort, activeFields);
   });
+  this.subscribe('trailGuideProducts');
 });
 
 Template.trailGuideDashboard.helpers({
@@ -67,6 +68,9 @@ Template.trailGuideDashboard.helpers({
   },
   humanReadableField: function (field) {
     return DefaultFields[field];
+  },
+  products: function () {
+    return ReactionCore.Collections.Products.find();
   }
 });
 
@@ -100,6 +104,14 @@ Template.trailGuideDashboard.events({
     const billingName = event.target.billingName.value;
     if (billingName) {
       find['billing.address.fullName'] = billingName;
+    } else {
+      delete find['billing.address.fullName'];
+    }
+    const productId = event.target.products.value;
+    if (productId) {
+      find['items.productId'] = productId;
+    } else {
+      delete find['items.productId'];
     }
     Session.set('find', find);
   }
