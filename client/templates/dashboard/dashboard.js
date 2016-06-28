@@ -1,6 +1,13 @@
+/*
+  * To add additional fields, simply add the field to default fields
+  ** Determine if that field should be in nonDefault
+  *** Make sure data is returned in switch statements.
+*/
+
 const DefaultFields = {
   'orderNumber': '#',
   'billing.address.fullName': 'Customer',
+  'shipping.address.fullName': 'Shipping To',
   'email': 'Email',
   'billing.address.phone': 'Phone',
   'billing.invoice.total': 'Total',
@@ -26,7 +33,11 @@ Template.trailGuideDashboard.onCreated(function () {
   let displayFields = Object.keys(DefaultFields);
   let defaultDisplay = {};
   _.each(displayFields, function (df) {
-    const nonDefault = ['email', 'billing.address.phone', 'advancedFulfillment.localDelivery'];
+    const nonDefault = ['email',
+                        'billing.address.phone',
+                        'advancedFulfillment.localDelivery',
+                        'shipping.address.fullName'
+                        ];
     if (_.contains(nonDefault, df)) {
       defaultDisplay[df] = false;
     } else {
@@ -107,6 +118,12 @@ Template.trailGuideDashboard.events({
     } else {
       delete find['billing.address.fullName'];
     }
+    const shippingName = event.target.shippingName.value;
+    if (shippingName) {
+      find['shipping.address.fullName'] = shippingName;
+    } else {
+      delete find['shipping.address.fullName'];
+    }
     const productId = event.target.products.value;
     if (productId) {
       find['items.productId'] = productId;
@@ -158,7 +175,9 @@ Template.columnMainRow.helpers({
     const field = this.valueOf();
     switch (field) {
     case 'billing.address.fullName':
-      return Template.parentData().billing[0].address.fullName;
+    case 'shipping.address.fullName':
+      const billOrShip = field.split('.')[0];
+      return Template.parentData()[billOrShip][0].address.fullName;
     case 'billing.address.phone':
       return Template.parentData().billing[0].address.phone;
     case 'advancedFulfillment.localDelivery':

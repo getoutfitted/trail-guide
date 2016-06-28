@@ -15,6 +15,9 @@ Meteor.publish('trailGuideAllOrders', function (find, limit, sort, fields) {
   if (findCriteria['billing.address.fullName']) {
     findCriteria['billing.address.fullName'] = new RegExp(findCriteria['billing.address.fullName'], 'i');
   }
+  if (findCriteria['shipping.address.fullName']) {
+    findCriteria['shipping.address.fullName'] = new RegExp(findCriteria['shipping.address.fullName'], 'i');
+  }
   if (Roles.userIsInRole(this.userId, 'trail-guide', ReactionCore.getShopId())) {
     return ReactionCore.Collections.Orders.find(findCriteria, {
       limit: limit,
