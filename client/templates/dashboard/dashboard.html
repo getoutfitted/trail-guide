@@ -1,61 +1,130 @@
 <template name='trailGuideDashboard'>
-  <div class='container-fluid'>
+  <div class='container-fluid '>
     <div class='row text-center'>
       <h1><i class="fa fa-map-signs" aria-hidden="true"></i> Trail Guide</h1>
     </div>
-    <div class='row filters'>
-      <a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-  Link with href
-</a>
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-  Button with data-target
-</button>
-<div class="collapse" id="collapseExample">
-  <div class="well">
-    ...
-  </div>
-</div>
+    <div class='row text-center'>
+      <h2>Orders</h2>
+    </div>
+    <div class='row filters text-center'>
+      <a class="btn btn-default btn-sm" role="button" data-toggle="collapse" href="#orderFilters" aria-expanded="false" aria-controls="orderFilters">Filters</a>
+    </div>
+    <br/>
+    <div class="collapse" id="orderFilters">
+      <div class="well text-center">
+        <div class='row'>
+          <div class='col-xs-3'>
+            <form class='form-inline'>
+                <div class="form-group">
+                  <label for="limitFilter">Limit:</label>
+                  <input type="number" id='limitFilter' min="1" class="form-control limitFilter" value={{currentLimit}} name="limit">
+                </div>
+            </form>
+          </div>
+          <div class='col-xs-9'>
+            <div class='row'>
+            {{#each displayFields}}
+              <div class='col-xs-2'>
+                <div class="checkbox">
+                  <label>
+                    <input name='{{this}}' class='toggleDisplayField' id='{{this}}' checked="{{fields this}}" type="checkbox"> {{humanReadableField this}}
+                  </label>
+                </div>
+              </div>
+            {{/each}}
+            </div>
+          </div>
+        </div>
+        <div class='row text-center'>
+          <h4>Advanced Search Criteria:</h4>
+          <form class='advancedSearchFilters'>
+            <div class='col-xs-6'>
+              <div class="form-group">
+                <label for="billingName">Customer Name</label>
+                <input class="form-control" name='billingName' id="billingName" placeholder="Search Paul Grever, Paul or P">
+              </div>
+              <div class="form-group">
+                <label for="shippingName">Shipping Name</label>
+                <input class="form-control" name='shippingName' id="shippinName" placeholder="Search Paul Grever, Paul or P">
+              </div>
+            </div>
+            <div class='col-xs-6'>
+              <div class='form-group'>
+                <label for='orderswithProducts'>Products in Orders</label>
+                <select name='products' id='orderswithProducts' class="form-control">
+                  <option value='' disabled selected >Select a Product</option>
+                  {{#each products}}
+                    <option value='{{_id}}'>{{pageTitle}}</option>
+                  {{/each}}
+                  <option value='' >Clear Items</option>
+                </select>
+              </div>
+              <div class='row'>
+                <div class="col-xs-6 form-group">
+                  <label for="orderMin">Minimum Order #</label>
+                  <input type='number' min='0' class="form-control" name='orderMin' id="orderMin">
+                </div>
+                <div class="col-xs-6 form-group">
+                  <label for="orderMax">Maximum Order #</label>
+                  <input type='number' class="form-control" name='orderMax' id="orderMax">
+                </div>
+              </div>
+            </div>
+            <div class='col-xs-12'>
+              <button class='btn btn-default'>Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
     <div class='row'>
-      <table class='table table-striped table-hover table-condensed'>
+      <table class='table table-hover table-condensed trail-guide-table'>
+        {{#each displayFields}}
+          {{> columnGroupHeader}}
+        {{/each}}
         <thead>
           <tr>
-            <th data-field='orderNumber' class='sortField'>{{{upOrDown 'orderNumber'}}}#</th>
-            <th>Customer</th>
-            <th>Contact</th>
-            <th data-field='createdAt' class='sortField'>{{{upOrDown 'createdAt'}}}Placed</th>
-            <th data-field='advancedFulfillment.transitTime' class='sortField'>{{{upOrDown 'advancedFulfillment.transitTime'}}}Transit</th>
-            <th data-field='advancedFulfillment.shipmentDate' class='sortField'>{{{upOrDown 'advancedFulfillment.shipmentDate'}}}Shippin</th>
-            <th data-field='startTime' class='sortField'>{{{upOrDown 'startTime'}}}Rental Start</th>
-            <th data-field='endTime' class='sortField'>{{{upOrDown 'endTime'}}}Rental End</th>
-            <th data-field='advancedFulfillment.returnDate' class='sortField'>{{{upOrDown 'advancedFulfillment.returnDate'}}}Rental End</th>
-            <th data-field='rentalDays' class='sortField'>{{{upOrDown 'rentalDays'}}}Length</th>
-            <th data-field='shipping.address.region' class='sortField'>{{{upOrDown 'shipping.address.region'}}}Ship To</th>
-            <th data-field='billing.address.region' class='sortField'>{{{upOrDown 'billing.address.region'}}}Bill To</th>
-            <th data-field='advancedFulfillment.workflow.status' class='sortField'>{{{upOrDown 'advancedFulfillment.workflow.status'}}}Status</th>
-
+          {{#each displayFields}}
+            {{> columnMainHeaders}}
+          {{/each}}
           </tr>
         </thead>
         <tbody>
           {{#each orders}}
-            <tr>
-              <td>{{orderNumber}}</td>
-              <td>{{customer}}</td>
-              <td>{{{contactInfo}}}</td>
-              <td>{{clearDate createdAt}}</td>
-              <td>{{advancedFulfillment.transitTime}}</td>
-              <td>{{clearDate advancedFulfillment.shipmentDate}}</td>
-              <td>{{clearDate startTime}}</td>
-              <td>{{clearDate endTime}}</td>
-              <td>{{clearDate advancedFulfillment.returnDate}}</td>
-              <td>{{rentalDays}}</td>
-              <td>{{region 'shipping'}}</td>
-              <td>{{region 'billing'}}</td>
-              <td>{{humanizeStatus}}</td>
+            <tr data-id="{{_id}}" class="trailGuideOrder">
+              {{#each displayFields}}
+                {{> columnMainRow}}
+              {{/each}}
             </tr>
           {{/each}}
         </tbody>
       </table>
     </div>
   </div>
+</template>
+
+<template name='columnGroupHeader'>
+  {{#if enabled}}
+    <colgroup class='{{active}}'></colgroup>
+  {{/if}}
+</template>
+
+<template name='columnMainHeaders'>
+  {{#if enabled}}
+    <th data-field='{{this}}' class='sortField'>{{> Template.dynamic template=upOrDown}}{{label}}</th>
+  {{/if}}
+</template>
+
+<template name='upArrow'>
+  <i data-field={{this}} class="fa fa-caret-up change" aria-hidden="true"></i>
+</template>
+
+<template name='downArrow'>
+  <i data-field={{this}} class="fa fa-caret-down change" aria-hidden="true"></i>
+</template>
+
+<template name='columnMainRow'>
+  {{#if enabled}}
+    <td>{{orderInfo}}</td>
+  {{/if}}
 </template>
