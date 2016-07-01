@@ -9,6 +9,7 @@ Package.onUse(function (api) {
   api.versionsFrom('METEOR@1.3');
   api.use('meteor-platform');
   api.use('http');
+  api.use('less');
   api.use('underscore');
   api.use('standard-minifiers');
   api.use('reactioncommerce:core@0.12.0');
@@ -20,6 +21,8 @@ Package.onUse(function (api) {
     'server/registry.js',
     'server/publications/trailGuide.js'
   ], 'server');
+
+  api.addFiles('client/templates/dashboard/dashboard.less', 'client');
 
   api.addFiles([
     'client/templates/dashboard/dashboard.html',
