@@ -1,3 +1,13 @@
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
+import { _ } from 'meteor/underscore';
+import { Orders } from '/lib/collections';
+import { Reaction } from '/client/api';
+import moment from 'moment';
+import AdvancedFulfillment from '../../../../reaction-advanced-fulfillment/lib/api';
+
+import './dashboard.html';
 /*
   * To add additional fields, simply add the field to default fields
   ** Determine if that field should be in nonDefault
@@ -64,7 +74,7 @@ Template.trailGuideDashboard.helpers({
     let order = Session.get('sortOrder');
     let sortOrder = {};
     sortOrder[field] = order;
-    return ReactionCore.Collections.Orders.find({}, {
+    return Orders.find({}, {
       sort: sortOrder
     });
   },
@@ -152,8 +162,8 @@ Template.trailGuideDashboard.events({
   'click tr ': function (event) {
     event.preventDefault();
     const _id = this._id;
-    if (_id && ReactionCore.hasPermission('advancedFulfillment')) {
-      ReactionRouter.go('orderDetails', {_id: _id});
+    if (_id && Reaction.hasPermission('advancedFulfillment')) {
+      Reaction.Router.go('orderDetails', {_id: _id});
     }
   }
 });
